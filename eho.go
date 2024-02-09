@@ -50,6 +50,6 @@ func GetDegree(year int) Degree {
 	}
 }
 
-func DegreeToStr(degree Degree, lang Lang) string {
+func DegreeToString(degree Degree, lang Lang) string {
 	return MULTILINGUAL[lang][degree]
 }
