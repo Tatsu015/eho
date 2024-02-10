@@ -57,7 +57,9 @@ func DegreeToString(degree Degree, lang Lang) (string, error) {
 		return "", fmt.Errorf("lang not exist: %v", lang)
 	}
 	if _, ok := MULTILINGUAL[lang][degree]; !ok {
-		return "", fmt.Errorf("degree not exist: %v", lang)
+		return "", fmt.Errorf("degree not exist: %v", degree)
 	}
-	return MULTILINGUAL[lang][degree], nil
+	dmap := MULTILINGUAL[lang]
+	d := dmap[degree]
+	return d, nil
 }
