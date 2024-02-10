@@ -1,5 +1,7 @@
 package eho
 
+import "fmt"
+
 type Degree int
 type Lang string
 
@@ -50,6 +52,12 @@ func GetDegree(year int) Degree {
 	}
 }
 
-func DegreeToString(degree Degree, lang Lang) string {
-	return MULTILINGUAL[lang][degree]
+func DegreeToString(degree Degree, lang Lang) (string, error) {
+	if _, ok := MULTILINGUAL[lang]; !ok {
+		return "", fmt.Errorf("lang not exist: %v", lang)
+	}
+	if _, ok := MULTILINGUAL[lang][degree]; !ok {
+		return "", fmt.Errorf("degree not exist: %v", lang)
+	}
+	return MULTILINGUAL[lang][degree], nil
 }

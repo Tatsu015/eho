@@ -48,34 +48,47 @@ func TestGetDirection(t *testing.T) {
 func TestDegreeToString(t *testing.T) {
 	cases := map[string]struct {
 		degree    Degree
-		lang      Lang
-		expectStr string
+		expectJa  string
+		expectEn  string
+		expectErr assert.ErrorAssertionFunc
 	}{
 		"ENE-ja": {
 			degree:    75,
-			lang:      "ja",
-			expectStr: "東北東",
+			expectJa:  "東北東",
+			expectEn:  "ENE",
+			expectErr: assert.NoError,
 		},
 		"SSE-ja": {
 			degree:    165,
-			lang:      "ja",
-			expectStr: "南南東",
+			expectJa:  "南南東",
+			expectEn:  "SSE",
+			expectErr: assert.NoError,
 		},
 		"WSW-ja": {
 			degree:    225,
-			lang:      "ja",
-			expectStr: "西南西",
+			expectJa:  "西南西",
+			expectEn:  "WSW",
+			expectErr: assert.NoError,
 		},
 		"NNW-ja": {
 			degree:    345,
-			lang:      "ja",
-			expectStr: "北北西",
+			expectJa:  "北北西",
+			expectEn:  "NNW",
+			expectErr: assert.NoError,
 		},
 	}
 	for name, tt := range cases {
 		t.Run(name, func(t *testing.T) {
-			s := DegreeToString(tt.degree, tt.lang)
-			assert.Equal(t, tt.expectStr, s)
+			ja, err1 := DegreeToString(tt.degree, "ja")
+			en, err2 := DegreeToString(tt.degree, "en")
+			if !tt.expectErr(t, err1) || err1 != nil {
+				return
+			}
+			if !tt.expectErr(t, err2) || err2 != nil {
+				return
+			}
+			assert.Equal(t, tt.expectJa, ja)
+			assert.Equal(t, tt.expectEn, en)
 		})
 	}
 }
