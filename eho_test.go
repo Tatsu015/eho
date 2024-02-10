@@ -48,47 +48,84 @@ func TestGetDirection(t *testing.T) {
 func TestDegreeToString(t *testing.T) {
 	cases := map[string]struct {
 		degree    Degree
-		expectJa  string
-		expectEn  string
+		lang      string
+		expectStr string
 		expectErr assert.ErrorAssertionFunc
 	}{
+		// ja
 		"ENE-ja": {
 			degree:    75,
-			expectJa:  "東北東",
-			expectEn:  "ENE",
+			lang:      "ja",
+			expectStr: "東北東",
 			expectErr: assert.NoError,
 		},
 		"SSE-ja": {
 			degree:    165,
-			expectJa:  "南南東",
-			expectEn:  "SSE",
+			lang:      "ja",
+			expectStr: "南南東",
 			expectErr: assert.NoError,
 		},
 		"WSW-ja": {
 			degree:    225,
-			expectJa:  "西南西",
-			expectEn:  "WSW",
+			lang:      "ja",
+			expectStr: "西南西",
 			expectErr: assert.NoError,
 		},
 		"NNW-ja": {
 			degree:    345,
-			expectJa:  "北北西",
-			expectEn:  "NNW",
+			lang:      "ja",
+			expectStr: "北北西",
 			expectErr: assert.NoError,
+		},
+		// en
+		"ENE-en": {
+			degree:    75,
+			lang:      "en",
+			expectStr: "ENE",
+			expectErr: assert.NoError,
+		},
+		"SSE-en": {
+			degree:    165,
+			lang:      "en",
+			expectStr: "SSE",
+			expectErr: assert.NoError,
+		},
+		"WSW-en": {
+			degree:    225,
+			lang:      "en",
+			expectStr: "WSW",
+			expectErr: assert.NoError,
+		},
+		"NNW-en": {
+			degree:    345,
+			lang:      "en",
+			expectStr: "NNW",
+			expectErr: assert.NoError,
+		},
+		"lang error": {
+			degree:    345,
+			lang:      "a",
+			expectStr: "北北西",
+			expectErr: func(t assert.TestingT, err error, i ...interface{}) bool {
+				return assert.EqualError(t, err, "lang not exist: a")
+			},
+		},
+		"degree error": {
+			degree:    0,
+			lang:      "ja",
+			expectStr: "北北西",
+			expectErr: func(t assert.TestingT, err error, i ...interface{}) bool {
+				return assert.EqualError(t, err, "degree not exist: 0")
+			},
 		},
 	}
 	for name, tt := range cases {
 		t.Run(name, func(t *testing.T) {
-			ja, err1 := DegreeToString(tt.degree, "ja")
-			en, err2 := DegreeToString(tt.degree, "en")
+			ja, err1 := DegreeToString(tt.degree, Lang(tt.lang))
 			if !tt.expectErr(t, err1) || err1 != nil {
 				return
 			}
-			if !tt.expectErr(t, err2) || err2 != nil {
-				return
-			}
-			assert.Equal(t, tt.expectJa, ja)
-			assert.Equal(t, tt.expectEn, en)
+			assert.Equal(t, tt.expectStr, ja)
 		})
 	}
 }
